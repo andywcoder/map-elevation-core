@@ -6,7 +6,7 @@ namespace Santolibre.Map.Elevation.Lib.Models
     {
         public float Longitude { get; set; }
         public float Latitude { get; set; }
-        public float Elevation { get; set; }
+        public float? Elevation { get; set; }
         public float Distance { get; set; }
 
         public IGeoPoint GetDestinationPoint(float bearing, double distance)

@@ -42,14 +42,14 @@ namespace Santolibre.Map.Elevation.LibTest.Services
 
             for (var j = 1; j < points.Count; j++)
             {
-                if (points[j - 1].Elevation < points[j].Elevation)
-                    statistics.Gain += points[j].Elevation - points[j - 1].Elevation;
+                if (points[j - 1].Elevation.Value < points[j].Elevation.Value)
+                    statistics.Gain += points[j].Elevation.Value - points[j - 1].Elevation.Value;
                 else
-                    statistics.Loss += points[j - 1].Elevation - points[j].Elevation;
+                    statistics.Loss += points[j - 1].Elevation.Value - points[j].Elevation.Value;
             }
 
-            statistics.Minimum = points.Min(x => x.Elevation);
-            statistics.Maximum = points.Max(x => x.Elevation);
+            statistics.Minimum = points.Min(x => x.Elevation.Value);
+            statistics.Maximum = points.Max(x => x.Elevation.Value);
 
             return statistics;
         }
