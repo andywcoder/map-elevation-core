@@ -18,36 +18,36 @@ namespace Santolibre.Map.Elevation.Lib.Services
             _configuration = configuration;
         }
 
-        private void WindowSmooth(List<INode> nodes, float[] smoothingFilter)
+        private void WindowSmooth(List<IGeoLocation> points, float[] smoothingFilter)
         {
-            for (var i = smoothingFilter.Length / 2; i < nodes.Count - smoothingFilter.Length / 2; i++)
+            for (var i = smoothingFilter.Length / 2; i < points.Count - smoothingFilter.Length / 2; i++)
             {
                 float elevationSum = 0;
                 for (var j = -smoothingFilter.Length / 2; j <= smoothingFilter.Length / 2; j++)
                 {
-                    elevationSum += smoothingFilter[j + smoothingFilter.Length / 2] * nodes[i - j].Elevation;
+                    elevationSum += smoothingFilter[j + smoothingFilter.Length / 2] * points[i - j].Elevation;
                 }
-                nodes[i].Elevation = elevationSum / smoothingFilter.Sum();
+                points[i].Elevation = elevationSum / smoothingFilter.Sum();
             }
         }
 
-        private void FeedbackSmooth(List<INode> nodes, float feedbackWeight, float currentWeight)
+        private void FeedbackSmooth(List<IGeoLocation> points, float feedbackWeight, float currentWeight)
         {
-            var filteredValue = nodes[0].Elevation;
-            for (var i = 0; i < nodes.Count; i++)
+            var filteredValue = points[0].Elevation;
+            for (var i = 0; i < points.Count; i++)
             {
-                filteredValue = (filteredValue * feedbackWeight + nodes[i].Elevation * currentWeight) / (feedbackWeight + currentWeight);
-                nodes[i].Elevation = filteredValue;
+                filteredValue = (filteredValue * feedbackWeight + points[i].Elevation * currentWeight) / (feedbackWeight + currentWeight);
+                points[i].Elevation = filteredValue;
             }
-            filteredValue = nodes[nodes.Count - 1].Elevation;
-            for (var i = nodes.Count - 1; i >= 0; i--)
+            filteredValue = points[points.Count - 1].Elevation;
+            for (var i = points.Count - 1; i >= 0; i--)
             {
-                filteredValue = (filteredValue * feedbackWeight + nodes[i].Elevation * currentWeight) / (feedbackWeight + currentWeight);
-                nodes[i].Elevation = filteredValue;
+                filteredValue = (filteredValue * feedbackWeight + points[i].Elevation * currentWeight) / (feedbackWeight + currentWeight);
+                points[i].Elevation = filteredValue;
             }
         }
 
-        private DigitalElevationModelType? GetElevations(List<INode> nodes)
+        private DigitalElevationModelType? LookupElevations(List<IGeoLocation> points)
         {
             var dataPath = _configuration.GetValue<string>("AppSettings:DemFolder");
 
@@ -69,9 +69,9 @@ namespace Santolibre.Map.Elevation.Lib.Services
             var areFilesAvailable = true;
 
             // Check HGT files
-            foreach (var node in nodes)
+            foreach (var point in points)
             {
-                var filename = HGT.GetFilename(node.Latitude, node.Longitude);
+                var filename = HGT.GetFilename(point.Latitude, point.Longitude);
                 if (File.Exists(Path.Combine(dataPath, filename)))
                 {
                     if (!cache.ContainsKey(filename))
@@ -90,19 +90,19 @@ namespace Santolibre.Map.Elevation.Lib.Services
             }
             if (areFilesAvailable)
             {
-                foreach (var node in nodes)
+                foreach (var point in points)
                 {
-                    var hgt = (HGT)cache[HGT.GetFilename(node.Latitude, node.Longitude)];
-                    node.Elevation = hgt.GetElevation(node.Latitude, node.Longitude);
+                    var hgt = (HGT)cache[HGT.GetFilename(point.Latitude, point.Longitude)];
+                    point.Elevation = hgt.GetElevation(point.Latitude, point.Longitude);
                 }
                 return DigitalElevationModelType.SRTM1;
             }
 
             // Check geotiff files
             areFilesAvailable = true;
-            foreach (var node in nodes)
+            foreach (var point in points)
             {
-                var filename = GeoTiff.GetFilename(node.Latitude, node.Longitude);
+                var filename = GeoTiff.GetFilename(point.Latitude, point.Longitude);
                 if (File.Exists(Path.Combine(dataPath, filename)))
                 {
                     if (!cache.ContainsKey(filename))
@@ -121,10 +121,10 @@ namespace Santolibre.Map.Elevation.Lib.Services
             }
             if (areFilesAvailable)
             {
-                foreach (var node in nodes)
+                foreach (var point in points)
                 {
-                    var geoTiff = (GeoTiff)cache[GeoTiff.GetFilename(node.Latitude, node.Longitude)];
-                    node.Elevation = geoTiff.GetElevation(node.Latitude, node.Longitude);
+                    var geoTiff = (GeoTiff)cache[GeoTiff.GetFilename(point.Latitude, point.Longitude)];
+                    point.Elevation = geoTiff.GetElevation(point.Latitude, point.Longitude);
                 }
                 return DigitalElevationModelType.SRTM3;
             }
@@ -132,11 +132,11 @@ namespace Santolibre.Map.Elevation.Lib.Services
             return null;
         }
 
-        public DigitalElevationModelType? GetElevations(List<INode> nodes, SmoothingMode smoothingMode, int maxNodes)
+        public DigitalElevationModelType? LookupElevations(List<IGeoLocation> points, SmoothingMode smoothingMode, int maxPoints)
         {
-            nodes = nodes.Take(maxNodes).ToList();
+            points = points.Take(maxPoints).ToList();
 
-            var demType = GetElevations(nodes);
+            var demType = LookupElevations(points);
             if (demType.HasValue)
             {
                 if (demType.Value == DigitalElevationModelType.SRTM1)
@@ -144,10 +144,10 @@ namespace Santolibre.Map.Elevation.Lib.Services
                     switch (smoothingMode)
                     {
                         case SmoothingMode.WindowSmooth:
-                            WindowSmooth(nodes, new float[] { 0.1f, 1f, 0.1f });
+                            WindowSmooth(points, new float[] { 0.1f, 1f, 0.1f });
                             break;
                         case SmoothingMode.FeedbackSmooth:
-                            FeedbackSmooth(nodes, 1, 3);
+                            FeedbackSmooth(points, 1, 3);
                             break;
                     }
                 }
@@ -156,20 +156,12 @@ namespace Santolibre.Map.Elevation.Lib.Services
                     switch (smoothingMode)
                     {
                         case SmoothingMode.WindowSmooth:
-                            WindowSmooth(nodes, new float[] { 1, 2, 3, 2, 1 });
+                            WindowSmooth(points, new float[] { 1, 2, 3, 2, 1 });
                             break;
                         case SmoothingMode.FeedbackSmooth:
-                            FeedbackSmooth(nodes, 3, 1);
+                            FeedbackSmooth(points, 3, 1);
                             break;
                     }
-                }
-
-                var totalDistance = 0f;
-                for (var i = 1; i < nodes.Count; i++)
-                {
-                    var distance = nodes[i - 1].GetDistanceToNode(nodes[i]);
-                    totalDistance += distance;
-                    nodes[i].Distance = totalDistance;
                 }
 
                 return demType.Value;

@@ -5,6 +5,6 @@ namespace Santolibre.Map.Elevation.Lib.Services
 {
     public interface IElevationService
     {
-        DigitalElevationModelType? GetElevations(List<INode> nodes, SmoothingMode smoothingMode, int maxNodes);
+        DigitalElevationModelType? LookupElevations(List<IGeoLocation> points, SmoothingMode smoothingMode, int maxPoints);
     }
 }

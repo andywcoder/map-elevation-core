@@ -10,7 +10,7 @@ namespace Santolibre.Map.Elevation.Lib
         /// <summary>
         /// Decode google style polyline coordinates
         /// </summary>
-        public static IEnumerable<INode> Decode(string encodedPoints)
+        public static IEnumerable<IGeoPoint> Decode(string encodedPoints)
         {
             if (string.IsNullOrEmpty(encodedPoints))
                 throw new ArgumentNullException("encodedPoints");
@@ -56,7 +56,7 @@ namespace Santolibre.Map.Elevation.Lib
 
                 currentLng += (sum & 1) == 1 ? ~(sum >> 1) : (sum >> 1);
 
-                yield return new Node
+                yield return new GeoPoint
                 {
                     Latitude = (float)(currentLat) / 1E6f,
                     Longitude = (float)(currentLng) / 1E6f
@@ -67,7 +67,7 @@ namespace Santolibre.Map.Elevation.Lib
         /// <summary>
         /// Encode google style polyline coordinates
         /// </summary>
-        public static string Encode(IEnumerable<Node> points)
+        public static string Encode(IEnumerable<GeoPoint> points)
         {
             var str = new StringBuilder();
 

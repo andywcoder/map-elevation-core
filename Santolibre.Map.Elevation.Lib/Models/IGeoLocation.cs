@@ -1,6 +1,6 @@
 ﻿namespace Santolibre.Map.Elevation.Lib.Models
 {
-    public interface IGeoLocationElevation
+    public interface IGeoLocation
     {
         float Longitude { get; set; }
         float Latitude { get; set; }

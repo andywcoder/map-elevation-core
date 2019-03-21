@@ -28,7 +28,10 @@
       "applicationUrl": "http://localhost:5000"
     },
     "IIS": {
-      "commandName": "IIS"
+      "commandName": "IIS",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

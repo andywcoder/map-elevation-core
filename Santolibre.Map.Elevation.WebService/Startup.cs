@@ -22,6 +22,7 @@ namespace Santolibre.Map.Elevation.WebService
         {
             services.AddScoped<IMetadataService, MetadataService>();
             services.AddScoped<IElevationService, ElevationService>();
+            services.AddScoped<IDistanceService, DistanceService>();
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton(AutoMapper.CreateMapper());
 

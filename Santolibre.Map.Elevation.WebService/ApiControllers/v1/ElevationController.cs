@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Santolibre.Map.Elevation.Lib;
+using Santolibre.Map.Elevation.Lib.Models;
 using Santolibre.Map.Elevation.Lib.Services;
 using Santolibre.Map.Elevation.WebService.ApiControllers.v1.Models;
 using System.Linq;
@@ -12,12 +13,14 @@ namespace Santolibre.Map.Elevation.WebService.ApiControllers.v1
     public class ElevationController : ControllerBase
     {
         private readonly IElevationService _elevationService;
+        private readonly IDistanceService _distanceService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public ElevationController(IElevationService elevationService, IMapper mapper, IConfiguration configuration)
+        public ElevationController(IElevationService elevationService, IDistanceService distanceService, IMapper mapper, IConfiguration configuration)
         {
             _elevationService = elevationService;
+            _distanceService = distanceService;
             _mapper = mapper;
             _configuration = configuration;
         }
@@ -32,7 +35,10 @@ namespace Santolibre.Map.Elevation.WebService.ApiControllers.v1
                 return BadRequest(new { Error = "Couldn't decode points" });
             }
 
-            var elevationModelType = _elevationService.GetElevations(points, elevationQuery.SmoothingMode, _configuration.GetValue<int>("AppSettings:ElevationQueryMaxNodes"));
+            var elevationModelType = _elevationService.LookupElevations(points.ConvertAll(x => (IGeoLocation)x), elevationQuery.SmoothingMode, _configuration.GetValue<int>("AppSettings:ElevationQueryMaxPoints"));
+
+            _distanceService.CalculateDistances(points);
+
             if (elevationModelType.HasValue)
             {
                 return Ok(_mapper.Map<ElevationResponse>(points));
