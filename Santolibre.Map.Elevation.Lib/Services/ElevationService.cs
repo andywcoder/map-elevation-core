@@ -76,7 +76,7 @@ namespace Santolibre.Map.Elevation.Lib.Services
                 {
                     if (!cache.ContainsKey(filename))
                     {
-                        using (Stream stream = new FileStream(Path.Combine(dataPath, filename), FileMode.Open))
+                        using (Stream stream = new FileStream(Path.Combine(dataPath, filename), FileMode.Open, FileAccess.Read))
                         {
                             var hgt = HGT.Create(stream);
                             cache.Add(filename, hgt);
@@ -107,7 +107,7 @@ namespace Santolibre.Map.Elevation.Lib.Services
                 {
                     if (!cache.ContainsKey(filename))
                     {
-                        using (Stream stream = new FileStream(Path.Combine(dataPath, filename), FileMode.Open))
+                        using (Stream stream = new FileStream(Path.Combine(dataPath, filename), FileMode.Open, FileAccess.Read))
                         {
                             var hgt = GeoTiff.Create(stream);
                             cache.Add(filename, hgt);
