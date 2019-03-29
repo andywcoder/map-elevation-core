@@ -61,6 +61,7 @@ namespace Santolibre.Map.Elevation.Lib.Models
 
             var x = (int)Math.Round((longitude - (5.0 / 6000) - minLon) / (5.0 / 6000));
             var y = (int)Math.Round((maxLat - latitude) / (5.0 / 6000));
+            y = Math.Min(y, 5999);
 
             var elevation = _geoTiffData[y * 6000 + x];
 
