@@ -46,3 +46,11 @@ Get elevations of a list of points
 Get elevations of a list of points with smoothing
 
 ```GET https://elevation.map.santolibre.net/api/v1/elevation?encodedPoints=ksiuxAe%60nzN_%40qFqBkTiByWeAoLk%40kPsB%7DF%5DcC&&smoothingMode=FeedbackSmooth```
+
+### IIS configuration
+
+If the elevation service is hosted in IIS the max query string size should be increased to allow larger elevation queries.
+
+Either change/add the following setting in the web.config or globally in applicationHost.config
+
+<requestLimits maxQueryString="16384" />
