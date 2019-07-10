@@ -51,4 +51,4 @@ If the elevation service is hosted in IIS the max query string size should be in
 
 Either change/add the following setting in the web.config or globally in applicationHost.config
 
-<requestLimits maxQueryString="16384" />
+```<requestLimits maxQueryString="16384" />```
