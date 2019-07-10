@@ -16,7 +16,7 @@ This is the ASP.NET Core MVC version, for the ASP.NET Web API 2 version go to ht
       <th>Description</th>
     </tr>
     <tr>
-	  <td>encodedPoints</td>
+      <td>encodedPoints</td>
       <td>Points in the encoded polyline format (https://developers.google.com/maps/documentation/utilities/polylinealgorithm)</td>
     </tr>
     <tr>
