@@ -2,8 +2,6 @@
 
 An elevation service that uses DEM data in the HGT or GeoTIFF format.
 
-This is the ASP.NET Core MVC version, for the ASP.NET Web API 2 version go to https://github.com/Andy9FromSpace/map-elevation
-
 ## API
 
 ```GET http://elevation.map.santolibre.net/api/v1/elevation?encodedPoints=[encodedPoints]```
