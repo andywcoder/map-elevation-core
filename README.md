@@ -4,7 +4,7 @@ An elevation service that uses DEM data in the HGT or GeoTIFF format.
 
 ## API
 
-```GET http://elevation.map.santolibre.net/api/v1/elevation?encodedPoints=[encodedPoints]```
+```GET https://elevation.map.santolibre.net/api/v1/elevation?encodedPoints=[encodedPoints]```
 
 ### Parameters
 
