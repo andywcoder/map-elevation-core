@@ -2,11 +2,9 @@
 
 An elevation service that uses DEM data in the HGT or GeoTIFF format.
 
-This is the ASP.NET Core MVC version, for the ASP.NET Web API 2 version go to https://github.com/Andy9FromSpace/map-elevation
-
 ## API
 
-```GET http://elevation.map.santolibre.net/api/v1/elevation?encodedPoints=[encodedPoints]```
+```GET https://elevation.map.santolibre.net/api/v1/elevation?encodedPoints=[encodedPoints]```
 
 ### Parameters
 
@@ -53,4 +51,4 @@ If the elevation service is hosted in IIS the max query string size should be in
 
 Either change/add the following setting in the web.config or globally in applicationHost.config
 
-<requestLimits maxQueryString="16384" />
+```<requestLimits maxQueryString="16384" />```
