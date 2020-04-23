@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Santolibre.Map.Elevation.WebService", "Santolibre.Map.Elevation.WebService\Santolibre.Map.Elevation.WebService.csproj", "{150E2567-96E2-42B6-9A24-601BC7458112}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Santolibre.Map.Elevation.Lib", "Santolibre.Map.Elevation.Lib\Santolibre.Map.Elevation.Lib.csproj", "{CDA63173-2B66-448E-BC93-A111511D8F88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Santolibre.Map.Elevation.Lib", "Santolibre.Map.Elevation.Lib\Santolibre.Map.Elevation.Lib.csproj", "{CDA63173-2B66-448E-BC93-A111511D8F88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Santolibre.Map.Elevation.LibTest", "Santolibre.Map.Elevation.LibTest\Santolibre.Map.Elevation.LibTest.csproj", "{07F1319B-812D-44E3-9EFA-D8E7315D6DA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Santolibre.Map.Elevation.LibTest", "Santolibre.Map.Elevation.LibTest\Santolibre.Map.Elevation.LibTest.csproj", "{07F1319B-812D-44E3-9EFA-D8E7315D6DA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2D363103-BADA-48F9-B6A0-2B6516187A78}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
