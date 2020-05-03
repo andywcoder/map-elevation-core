@@ -8,7 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace Santolibre.Map.Elevation.LibTest.Services
+namespace Santolibre.Map.Elevation.LibTest
 {
     [TestClass]
     [DeploymentItem("TestData/N46E008.zip")]
