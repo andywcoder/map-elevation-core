@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Santolibre.Map.Elevation.Lib.Services;
+using Santolibre.Map.Elevation.Lib;
 
 namespace Santolibre.Map.Elevation.WebService
 {
@@ -23,7 +23,7 @@ namespace Santolibre.Map.Elevation.WebService
             services.AddScoped<IMetadataService, MetadataService>();
             services.AddScoped<IElevationService, ElevationService>();
             services.AddScoped<IDistanceService, DistanceService>();
-            services.AddSingleton<ICacheService, CacheService>();
+            services.AddSingleton<IDemFileCache, DemFileCache>();
             services.AddSingleton(AutoMapper.CreateMapper());
 
             services.AddCors();

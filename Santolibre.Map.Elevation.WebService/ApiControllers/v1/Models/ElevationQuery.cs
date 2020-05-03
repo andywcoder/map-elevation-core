@@ -1,4 +1,4 @@
-﻿using Santolibre.Map.Elevation.Lib.Models;
+﻿using Santolibre.Map.Elevation.Lib;
 using System.ComponentModel.DataAnnotations;
 
 namespace Santolibre.Map.Elevation.WebService.ApiControllers.v1.Models

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Santolibre.Map.Elevation.Utility": {
+      "commandName": "Project",
+      "commandLineArgs": "convert --input-format=HGT --input-path=C:\\Temp\\N46E008.hgt --output-format=PNG --output-path=C:\\Temp\\N46E008.png"
+    }
+  }
+}

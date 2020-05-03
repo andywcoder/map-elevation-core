@@ -13,8 +13,8 @@ namespace Santolibre.Map.Elevation.WebService
 
             var config = new MapperConfiguration(x =>
             {
-                x.CreateMap<Lib.Models.SrtmRectangle, ApiControllers.v1.Models.SrtmRectangle>();
-                x.CreateMap<List<Lib.Models.IGeoPoint>, ApiControllers.v1.Models.ElevationResponse>()
+                x.CreateMap<Lib.SrtmRectangle, ApiControllers.v1.Models.SrtmRectangle>();
+                x.CreateMap<List<Lib.IGeoPoint>, ApiControllers.v1.Models.ElevationResponse>()
                     .ForMember(dest => dest.RangeHeight, opt => opt.MapFrom(src => src.Select(y => new float[] { (float)Math.Round(y.Distance * 1000), (float)Math.Round(y.Elevation.Value, 1) }).ToList()));
             });
 

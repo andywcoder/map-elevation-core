@@ -2,8 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MKCoolsoft.GPXLib;
 using Moq;
-using Santolibre.Map.Elevation.Lib.Models;
-using Santolibre.Map.Elevation.Lib.Services;
+using Santolibre.Map.Elevation.Lib;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -60,9 +59,10 @@ namespace Santolibre.Map.Elevation.LibTest.Services
         {
             // Arrange
             var maxPoints = 10000;
-            var cacheService = new Mock<ICacheService>();
+            var cacheService = new Mock<IDemFileCache>();
             var configuration = new Mock<IConfiguration>();
             configuration.SetupKeyValuePair("AppSettings:DemFolder", "TestData");
+            configuration.SetupKeyValuePair("AppSettings:DemFileTypes", "GeoTiff,HgtRaw,HgtPng");
             var points = ReadPoints(Path.Combine("TestData", "elevation_profile_1.gpx"));
 
             var elevationService = new ElevationService(cacheService.Object, configuration.Object);
@@ -77,17 +77,16 @@ namespace Santolibre.Map.Elevation.LibTest.Services
             Assert.AreEqual(3139, statistics.Loss);
         }
 
-
-
         [TestMethod]
         [DeploymentItem("TestData/elevation_profile_1.gpx")]
         public void LookupElevations_PointsWindowSmooth_SRTM1()
         {
             // Arrange
             var maxPoints = 10000;
-            var cacheService = new Mock<ICacheService>();
+            var cacheService = new Mock<IDemFileCache>();
             var configuration = new Mock<IConfiguration>();
             configuration.SetupKeyValuePair("AppSettings:DemFolder", "TestData");
+            configuration.SetupKeyValuePair("AppSettings:DemFileTypes", "GeoTiff,HgtRaw,HgtPng");
             var points = ReadPoints(Path.Combine("TestData", "elevation_profile_1.gpx"));
 
             var elevationService = new ElevationService(cacheService.Object, configuration.Object);
@@ -108,9 +107,10 @@ namespace Santolibre.Map.Elevation.LibTest.Services
         {
             // Arrange
             var maxPoints = 10000;
-            var cacheService = new Mock<ICacheService>();
+            var cacheService = new Mock<IDemFileCache>();
             var configuration = new Mock<IConfiguration>();
             configuration.SetupKeyValuePair("AppSettings:DemFolder", "TestData");
+            configuration.SetupKeyValuePair("AppSettings:DemFileTypes", "GeoTiff,HgtRaw,HgtPng");
             var points = ReadPoints(Path.Combine("TestData", "elevation_profile_1.gpx"));
 
             var elevationService = new ElevationService(cacheService.Object, configuration.Object);
@@ -131,9 +131,10 @@ namespace Santolibre.Map.Elevation.LibTest.Services
         {
             // Arrange
             var maxPoints = 10000;
-            var cacheService = new Mock<ICacheService>();
+            var cacheService = new Mock<IDemFileCache>();
             var configuration = new Mock<IConfiguration>();
             configuration.SetupKeyValuePair("AppSettings:DemFolder", "TestData");
+            configuration.SetupKeyValuePair("AppSettings:DemFileTypes", "GeoTiff,HgtRaw,HgtPng");
             var points = ReadPoints(Path.Combine("TestData", "elevation_below_sea_level_route.gpx"));
 
             var elevationService = new ElevationService(cacheService.Object, configuration.Object);

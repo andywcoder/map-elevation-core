@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Santolibre.Map.Elevation.Lib;
-using Santolibre.Map.Elevation.Lib.Models;
-using Santolibre.Map.Elevation.Lib.Services;
 using Santolibre.Map.Elevation.WebService.ApiControllers.v1.Models;
 using System.Linq;
 

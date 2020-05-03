@@ -31,6 +31,9 @@
     <None Update="TestData\elevation_profile_3.gpx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\N46E008.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\N46E008.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
