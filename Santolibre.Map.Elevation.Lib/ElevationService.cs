@@ -49,7 +49,7 @@ namespace Santolibre.Map.Elevation.Lib
         private DigitalElevationModelType? LookupElevations(List<IGeoLocation> points)
         {
             var dataPath = _configuration.GetValue<string>("AppSettings:DemFolder");
-            var demFileTypes = _configuration.GetValue<string>("AppSettings:DemFileTypes").Split(",");
+            var demFileTypes = _configuration.GetValue<string>("AppSettings:DemFileTypes").Split(',');
             var cache = InitializeCache();
 
             bool areFilesAvailable;

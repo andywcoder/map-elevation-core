@@ -13,7 +13,8 @@ namespace Santolibre.Map.Elevation.WebService
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
+                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                logger.Debug($"Running app, ASPNETCORE_ENVIRONMENT={environment}");
                 CreateWebHostBuilder(args).Build().Run();
             }
             catch (Exception e)

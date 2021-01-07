@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.Hosting;
 using Santolibre.Map.Elevation.Lib;
 
 namespace Santolibre.Map.Elevation.WebService
@@ -28,20 +26,17 @@ namespace Santolibre.Map.Elevation.WebService
 
             services.AddCors();
             services
-                .AddMvc(options =>
+                .AddControllers(options =>
                 {
                     options.Filters.Add(typeof(ValidateModelStateAttribute));
                 })
                 .AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ssZ";
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -54,7 +49,13 @@ namespace Santolibre.Map.Elevation.WebService
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
-            app.UseMvc();
+
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
