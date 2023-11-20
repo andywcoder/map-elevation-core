@@ -2,10 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using Santolibre.Map.Elevation.Lib;
 using Santolibre.Map.Elevation.Utility.Commands;
-using System;
 
 namespace Santolibre.Map.Elevation.Utility
 {
@@ -15,21 +13,12 @@ namespace Santolibre.Map.Elevation.Utility
         {
             var servicesProvider = SetupServices();
 
-            try
-            {
-                var app = new CommandLineApplication();
-                app.Conventions
-                    .SetAppNameFromEntryAssembly()
-                    .UseConstructorInjection(servicesProvider);
-                RootCommand.Configure(app);
-                app.Execute(args);
-            }
-            catch (Exception e)
-            {
-                NLog.LogManager.GetCurrentClassLogger().Fatal(e.Message);
-            }
-
-            NLog.LogManager.Shutdown();
+            var app = new CommandLineApplication();
+            app.Conventions
+                .SetAppNameFromEntryAssembly()
+                .UseConstructorInjection(servicesProvider);
+            RootCommand.Configure(app);
+            app.Execute(args);
         }
 
         private static ServiceProvider SetupServices()
@@ -37,14 +26,10 @@ namespace Santolibre.Map.Elevation.Utility
             return new ServiceCollection()
                 .AddSingleton<IFileConverter, FileConverter>()
                 .AddSingleton<IConfiguration>(new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build())
-                .AddLogging(builder =>
+                .AddLogging(config =>
                 {
-                    builder.SetMinimumLevel(LogLevel.Trace);
-                    builder.AddNLog(new NLogProviderOptions
-                    {
-                        CaptureMessageTemplates = true,
-                        CaptureMessageProperties = true
-                    });
+                    config.SetMinimumLevel(LogLevel.Trace);
+                    config.AddConsole();
                 })
                 .AddTransient<ConvertCommand>()
                 .BuildServiceProvider();

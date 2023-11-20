@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Santolibre.Map.Elevation.Lib;
+using System.Text.Json.Serialization;
 
 namespace Santolibre.Map.Elevation.WebService
 {
@@ -32,7 +33,7 @@ namespace Santolibre.Map.Elevation.WebService
                 })
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 });
         }
 

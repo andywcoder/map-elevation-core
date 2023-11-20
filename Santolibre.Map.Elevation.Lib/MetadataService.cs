@@ -16,7 +16,7 @@ namespace Santolibre.Map.Elevation.Lib
         private List<SrtmRectangle> GetHGTRectangles(int fileSize)
         {
             var rectangles = new List<SrtmRectangle>();
-            var dataPath = _configuration.GetValue<string>("AppSettings:DemFolder");
+            var dataPath = _configuration["AppSettings:DemFolder"];
 
             if (Directory.Exists(dataPath))
             {
@@ -46,7 +46,7 @@ namespace Santolibre.Map.Elevation.Lib
         private List<SrtmRectangle> GetGeoTiffRectangles()
         {
             var rectangles = new List<SrtmRectangle>();
-            var dataPath = _configuration.GetValue<string>("AppSettings:DemFolder");
+            var dataPath = _configuration["AppSettings:DemFolder"];
 
             if (Directory.Exists(dataPath))
             {
