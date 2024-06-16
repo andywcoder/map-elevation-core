@@ -7,9 +7,7 @@ namespace Santolibre.Map.Elevation.LibTest
     {
         public static void SetupKeyValuePair(this Mock<IConfiguration> configuration, string key, string value)
         {
-            var configurationSection = new Mock<IConfigurationSection>();
-            configurationSection.Setup(x => x.Value).Returns(value);
-            configuration.Setup(c => c.GetSection(key)).Returns(configurationSection.Object);
+            configuration.Setup(x => x[key]).Returns(value);
         }
     }
 }

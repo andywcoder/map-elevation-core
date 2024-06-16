@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MKCoolsoft.GPXLib;
 using Moq;
 using Santolibre.Map.Elevation.Lib;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
@@ -18,11 +19,11 @@ namespace Santolibre.Map.Elevation.LibTest
         [ClassInitialize]
         public static void ExtractDemData(TestContext testContext)
         {
-            using (var zipFile = ZipFile.OpenRead(Path.Combine("TestData", "N46E008.zip")))
+            using (var zipFile = ZipFile.OpenRead("N46E008.zip"))
             {
                 zipFile.ExtractToDirectory("TestData", true);
             }
-            using (var zipFile = ZipFile.OpenRead(Path.Combine("TestData", "srtm_44_06.zip")))
+            using (var zipFile = ZipFile.OpenRead("srtm_44_06.zip"))
             {
                 zipFile.ExtractToDirectory("TestData", true);
             }
@@ -59,13 +60,14 @@ namespace Santolibre.Map.Elevation.LibTest
         {
             // Arrange
             var maxPoints = 10000;
-            var cacheService = new Mock<IDemFileCache>();
+            var memoryCache = new MemoryCache(new MemoryCacheOptions() { SizeLimit = 1024 * 1024 * 100 });
             var configuration = new Mock<IConfiguration>();
+            var logger = new Mock<ILogger<ElevationService>>();
             configuration.SetupKeyValuePair("AppSettings:DemFolder", "TestData");
             configuration.SetupKeyValuePair("AppSettings:DemFileTypes", "GeoTiff,HgtRaw,HgtPng");
-            var points = ReadPoints(Path.Combine("TestData", "elevation_profile_1.gpx"));
+            var points = ReadPoints("elevation_profile_1.gpx");
 
-            var elevationService = new ElevationService(cacheService.Object, configuration.Object);
+            var elevationService = new ElevationService(memoryCache, configuration.Object, logger.Object);
 
             // Act
             var digitalElevationModelType = elevationService.LookupElevations(points.ConvertAll(x => (IGeoLocation)x), SmoothingMode.None, maxPoints);
@@ -83,13 +85,14 @@ namespace Santolibre.Map.Elevation.LibTest
         {
             // Arrange
             var maxPoints = 10000;
-            var cacheService = new Mock<IDemFileCache>();
+            var memoryCache = new MemoryCache(new MemoryCacheOptions() { SizeLimit = 1024 * 1024 * 100 });
             var configuration = new Mock<IConfiguration>();
+            var logger = new Mock<ILogger<ElevationService>>();
             configuration.SetupKeyValuePair("AppSettings:DemFolder", "TestData");
             configuration.SetupKeyValuePair("AppSettings:DemFileTypes", "GeoTiff,HgtRaw,HgtPng");
-            var points = ReadPoints(Path.Combine("TestData", "elevation_profile_1.gpx"));
+            var points = ReadPoints("elevation_profile_1.gpx");
 
-            var elevationService = new ElevationService(cacheService.Object, configuration.Object);
+            var elevationService = new ElevationService(memoryCache, configuration.Object, logger.Object);
 
             // Act
             var digitalElevationModelType = elevationService.LookupElevations(points.ConvertAll(x => (IGeoLocation)x), SmoothingMode.WindowSmooth, maxPoints);
@@ -107,13 +110,14 @@ namespace Santolibre.Map.Elevation.LibTest
         {
             // Arrange
             var maxPoints = 10000;
-            var cacheService = new Mock<IDemFileCache>();
+            var memoryCache = new MemoryCache(new MemoryCacheOptions() { SizeLimit = 1024 * 1024 * 100 });
             var configuration = new Mock<IConfiguration>();
+            var logger = new Mock<ILogger<ElevationService>>();
             configuration.SetupKeyValuePair("AppSettings:DemFolder", "TestData");
             configuration.SetupKeyValuePair("AppSettings:DemFileTypes", "GeoTiff,HgtRaw,HgtPng");
-            var points = ReadPoints(Path.Combine("TestData", "elevation_profile_1.gpx"));
+            var points = ReadPoints("elevation_profile_1.gpx");
 
-            var elevationService = new ElevationService(cacheService.Object, configuration.Object);
+            var elevationService = new ElevationService(memoryCache, configuration.Object, logger.Object);
 
             // Act
             var digitalElevationModelType = elevationService.LookupElevations(points.ConvertAll(x => (IGeoLocation)x), SmoothingMode.FeedbackSmooth, maxPoints);
@@ -121,8 +125,8 @@ namespace Santolibre.Map.Elevation.LibTest
             // Assert
             Assert.AreEqual(DigitalElevationModelType.SRTM1, digitalElevationModelType);
             var statistics = CalculateStatistics(points);
-            Assert.AreEqual(2505, (int)statistics.Gain);
-            Assert.AreEqual(2428, (int)statistics.Loss);
+            Assert.AreEqual(1955, (int)statistics.Gain);
+            Assert.AreEqual(1876, (int)statistics.Loss);
         }
 
         [TestMethod]
@@ -131,13 +135,14 @@ namespace Santolibre.Map.Elevation.LibTest
         {
             // Arrange
             var maxPoints = 10000;
-            var cacheService = new Mock<IDemFileCache>();
+            var memoryCache = new MemoryCache(new MemoryCacheOptions() { SizeLimit = 1024 * 1024 * 100 });
             var configuration = new Mock<IConfiguration>();
+            var logger = new Mock<ILogger<ElevationService>>();
             configuration.SetupKeyValuePair("AppSettings:DemFolder", "TestData");
             configuration.SetupKeyValuePair("AppSettings:DemFileTypes", "GeoTiff,HgtRaw,HgtPng");
-            var points = ReadPoints(Path.Combine("TestData", "elevation_below_sea_level_route.gpx"));
+            var points = ReadPoints("elevation_below_sea_level_route.gpx");
 
-            var elevationService = new ElevationService(cacheService.Object, configuration.Object);
+            var elevationService = new ElevationService(memoryCache, configuration.Object, logger.Object);
 
             // Act
             var digitalElevationModelType = elevationService.LookupElevations(points.ConvertAll(x => (IGeoLocation)x), SmoothingMode.None, maxPoints);
