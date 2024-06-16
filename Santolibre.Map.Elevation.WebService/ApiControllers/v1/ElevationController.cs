@@ -37,7 +37,7 @@ namespace Santolibre.Map.Elevation.WebService.ApiControllers.v1
 
             _distanceService.CalculateDistances(points);
 
-            if (elevationModelType.HasValue)
+            if (elevationModelType != DigitalElevationModelType.None)
             {
                 return Ok(_mapper.Map<ElevationResponse>(points));
             }

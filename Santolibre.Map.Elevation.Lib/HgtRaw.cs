@@ -8,7 +8,11 @@ namespace Santolibre.Map.Elevation.Lib
         public const int HGT3601 = 25934402;
         public const int HGT1201 = 2884802;
 
-        public byte[] Data { get; }
+        protected readonly byte[] _data;
+
+        public byte[] Data { get { return _data; } }
+
+        public int SizeInBytes { get { return _data.Length; } }
 
         protected HgtRaw(byte[] data)
         {
@@ -17,7 +21,7 @@ namespace Santolibre.Map.Elevation.Lib
                 throw new Exception("HGT file has no valid size");
             }
 
-            Data = data;
+            _data = data;
         }
 
         public static IDemFile Create(string path)
@@ -44,7 +48,7 @@ namespace Santolibre.Map.Elevation.Lib
 
         public virtual void Save(string path)
         {
-            File.WriteAllBytes(path, Data);
+            File.WriteAllBytes(path, _data);
         }
 
         public static string GetFilename(double latitude, double longitude)
@@ -85,7 +89,7 @@ namespace Santolibre.Map.Elevation.Lib
             int latAdj = latitude < 0 ? 1 : 0;
             int lonAdj = longitude < 0 ? 1 : 0;
 
-            switch (Data.Length)
+            switch (_data.Length)
             {
                 case HGT1201:
                     return GetElevation(latitude, longitude, latAdj, lonAdj, 1200, 2402);
@@ -98,11 +102,11 @@ namespace Santolibre.Map.Elevation.Lib
         {
             double y = latitude;
             double x = longitude;
-            var offset = ((int)((x - (int)x + lonAdj) * width) * 2 + (width - (int)((y - (int)y + latAdj) * width)) * stride);
-            var h1 = Data[offset + 1] + Data[offset + 0] * 256;
-            var h2 = Data[offset + 3] + Data[offset + 2] * 256;
-            var h3 = Data[offset - stride + 1] + Data[offset - stride + 0] * 256;
-            var h4 = Data[offset - stride + 3] + Data[offset - stride + 2] * 256;
+            var offset = (int)((x - (int)x + lonAdj) * width) * 2 + (width - (int)((y - (int)y + latAdj) * width)) * stride;
+            var h1 = _data[offset + 1] + _data[offset + 0] * 256;
+            var h2 = _data[offset + 3] + _data[offset + 2] * 256;
+            var h3 = _data[offset - stride + 1] + _data[offset - stride + 0] * 256;
+            var h4 = _data[offset - stride + 3] + _data[offset - stride + 2] * 256;
 
             var m = Math.Max(h1, Math.Max(h2, Math.Max(h3, h4)));
             if (h1 == -32768)
@@ -114,8 +118,8 @@ namespace Santolibre.Map.Elevation.Lib
             if (h4 == -32768)
                 h4 = m;
 
-            var fx = longitude - (int)(longitude);
-            var fy = latitude - (int)(latitude);
+            var fx = longitude - (int)longitude;
+            var fy = latitude - (int)latitude;
 
             var elevation = (int)Math.Round((h1 * (1 - fx) + h2 * fx) * (1 - fy) + (h3 * (1 - fx) + h4 * fx) * fy);
 
@@ -124,12 +128,12 @@ namespace Santolibre.Map.Elevation.Lib
 
         public (byte[] Data, int Width, int Height) GetData()
         {
-            switch (Data.Length)
+            switch (_data.Length)
             {
                 case HGT1201:
-                    return (Data, 1201, 1201);
+                    return (_data, 1201, 1201);
                 default:
-                    return (Data, 3601, 3601);
+                    return (_data, 3601, 3601);
             }
         }
     }

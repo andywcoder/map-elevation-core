@@ -25,10 +25,10 @@ namespace Santolibre.Map.Elevation.Lib
         {
             using (var image = Image.Load<L16>(stream))
             {
-                if (image.TryGetSinglePixelSpan(out var pixelSpan))
+                if (image.DangerousTryGetSinglePixelMemory(out var pixelSpan))
                 {
                     var pixelArray = pixelSpan.ToArray();
-                    var data = MemoryMarshal.AsBytes(pixelSpan).ToArray();
+                    var data = MemoryMarshal.AsBytes(pixelSpan.Span).ToArray();
                     return Create(data);
                 }
                 else
@@ -45,9 +45,9 @@ namespace Santolibre.Map.Elevation.Lib
 
         public override void Save(string path)
         {
-            var size = Data.Length == HGT1201 ? 1201 : 3601;
+            var size = _data.Length == HGT1201 ? 1201 : 3601;
 
-            using (var image = Image.LoadPixelData<L16>(Data, size, size))
+            using (var image = Image.LoadPixelData<L16>(_data, size, size))
             {
                 image.Save(path, new PngEncoder());
             }
